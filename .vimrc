@@ -2,7 +2,7 @@
 " **********************  Plugin  ************************ "
 " ******************************************************** "
 
-" Pack availables: ['web', 'arduino', 'js', 'go', 'python', 'md', 'scala', 'latex', 'coq', 'haskell']
+" Pack availables: ['web', 'js', 'go', 'python', 'md', 'scala', 'latex', 'haskell']
 
 let s:packs_enabled=["", "python", "web", "haskell", "go"]
 
@@ -20,7 +20,7 @@ call vundle#begin()
 " call vundle#begin('~/some/path/here')
 
 " Plugin Manager
-Plugin 'gmarik/Vundle.vim'
+Plugin 'VundleVim/Vundle.vim'
 
 " ******************************************************** "
 " **********************   BASE   ************************ "
@@ -37,6 +37,9 @@ Plugin 'tpope/vim-fugitive'
 " Completion for main languages
 Plugin 'Valloric/YouCompleteMe'
 
+" Editorconfig formatting
+Plugin 'editorconfig/editorconfig-vim'
+
 " Basic colorschemes
 Plugin 'flazz/vim-colorschemes'
 
@@ -49,16 +52,26 @@ Plugin 'w0rp/ale'
 let &runtimepath.=',~/.vim/bundle/ale'
 filetype plugin on
 
+" Super - formatter
+Plugin 'Chiel92/vim-autoformat'
+au BufWrite * :Autoformat
+let g:autoformat_autoindent = 0
+let g:autoformat_retab = 0
+let g:autoformat_remove_trailing_spaces = 0
+
+" Polyglot
+Plugin 'sheerun/vim-polyglot'
+
 " Manage FS in vim
 Plugin 'scrooloose/nerdtree'
 
 " Tab /= align all =
 Plugin 'godlygeek/tabular'
 if exists(":Tabularize")
-    nmap <Leader>a= :Tabularize /=<CR>
-    vmap <Leader>a= :Tabularize /=<CR>
-    nmap <Leader>a: :Tabularize /:\zs<CR>
-    vmap <Leader>a: :Tabularize /:\zs<CR>
+    nmap <Leader>t= :Tabularize /=<CR>
+    vmap <Leader>t= :Tabularize /=<CR>
+    nmap <Leader>t: :Tabularize /:\zs<CR>
+    vmap <Leader>t: :Tabularize /:\zs<CR>
 endif
 
 "comment lines
@@ -83,7 +96,6 @@ endif
 
 " Javascript
 if (index(s:packs_enabled, "js") != -1)
-    Plugin 'leafgarland/typescript-vim'
     Plugin 'moll/vim-node'
     Plugin 'pangloss/vim-javascript'
     Plugin 'ElyKar/vim-jsdoc'
@@ -111,8 +123,6 @@ if (index(s:packs_enabled, "go") != -1)
     let g:go_highlight_operators = 1
     let g:go_highlight_build_constraints = 1
 
-    let g:syntastic_go_checkers = ['go', 'golint', 'errcheck']
-
     " Open go doc in vertical window, horizontal, or tab
     au Filetype go nnoremap <leader>v :vsp <CR>:exe "GoDef" <CR>
     au Filetype go nnoremap <leader>s :sp <CR>:exe "GoDef"<CR>
@@ -123,6 +133,7 @@ endif
 if (index(s:packs_enabled, "python") != -1)
     Plugin 'davidhalter/jedi-vim'
     Plugin 'nvie/vim-flake8'
+    Plugin 'python-mode/python-mode'
 endif
 
 " Markdown editor
@@ -140,12 +151,6 @@ if (index(s:packs_enabled, "latex") != -1)
     Plugin 'LaTeX-Box-Team/LaTeX-Box'
 endif
 
-" Coq
-if (index(s:packs_enabled, "coq") != -1)
-    Plugin 'let-def/vimbufsync'
-    Plugin 'the-lambda-church/coquille'
-endif
-
 " Haskell
 if (index(s:packs_enabled, "haskell") != -1)
     Plugin 'Shougo/vimproc.vim' " dependency
@@ -156,14 +161,6 @@ if (index(s:packs_enabled, "haskell") != -1)
     autocmd FileType haskell setlocal omnifunc=necoghc#omnifunc
     let g:ycm_semantic_triggers = {'haskell' : ['.']}
 endif
-
-if (index(s:packs_enabled, "arduino") != -1)
-    Plugin 'jplaut/vim-arduino-ino'
-    let g:vim_arduino_ino_cmd = 'ano' " Default compiling commang is ino
-    au BufRead,BufNewFile *.pde set filetype=arduino
-    au BufRead,BufNewFile *.ino set filetype=arduino
-endif
-
 
 call vundle#end()
 
@@ -253,22 +250,6 @@ autocmd FileType c set omnifunc=ccomplete#Complete
 " Swap files
 set backupdir=~/.vim-tmp,~/.tmp,~/tmp,/var/tmp,/tmp
 set directory=~/.vim-tmp,~/.tmp,~/tmp,/var/tmp,/tmp
-
-" Coq-specific functions: few abbreviations
-function LoadCoq()
-    ab forall ∀
-    ab exists ∃
-    ab -> →
-    ab <-> ↔
-    ab not ¬
-    ab /\ ∧
-    ab \/ ∨
-    map <buffer> <silent> <F8> :CoqNext<CR>
-    map <buffer> <silent> <F9> :CoqUndo<CR>
-    map <buffer> <silent> <F10> :CoqToCursor<CR>
-endfunction
-
-au FileType coq call LoadCoq()
 
 " Delete trailing white space on save
 func! DeleteTrailingWS()
