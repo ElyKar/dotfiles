@@ -1,0 +1,22 @@
+# Custom part of my conf
+
+alias scr="screen -R"
+
+export WORKSPACE=/mnt/sdb3/
+export DATA=/mnt/sdb1/
+export ISO=/mnt/sdb2/
+export GOROOT=/usr/lib/go
+export GOPATH=/mnt/sdb3/Golang/
+export PATH=$PATH:$GOPATH/bin:$GOROOT/bin
+
+# Change coloring
+eval `dircolors ~/.dir_colors`
+alias ls="ls --color=auto"
+
+# For cabal packages
+export PATH=$PATH:~/.cabal/bin:~/.local/bin
+
+# Yup, that's ugly. I'll fix that later
+if [ -z "$DISPLAY" ] && [ -z "$XDG_VNTR" ]; then
+    exec startx
+fi
