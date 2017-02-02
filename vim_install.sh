@@ -37,12 +37,8 @@ sudo pacman -S latex
 sudo pacman -S ghc ghc-mod
 sudo pacman -S stack
 
-# Install plugins
-echo ":PluginInstall" > /tmp/tmp_vim_install
-echo ":q" >> /tmp/tmp_vim_install
-echo ":q" >> /tmp/tmp_vim_install
-vim -s /tmp/tmp_vim_install
-rm /tmp/tmp_vim_install
+# Install plugins with Vundle
+vim +PluginInstall +qall
 
 # Install vimproc.vim
 cd ~/.vim/bundle/vimproc.vim
